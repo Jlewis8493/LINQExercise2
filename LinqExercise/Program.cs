@@ -24,14 +24,50 @@ namespace LinqExercise
              */
 
             //Print the Sum and Average of numbers
+            Console.WriteLine($"Sum of numbers: {numbers.Sum()}");
+            Console.WriteLine($"Average of numbers: {numbers.Average()}\n");
 
             //Order numbers in ascending order and decsending order. Print each to console.
+            var ascOrder = numbers.OrderBy(num => num);
+            //var descOrder = numbers.OrderByDescending(num => num);
+
+            Console.WriteLine("Numbers ascending");
+            foreach(var num in ascOrder)
+            {
+                Console.WriteLine(num);
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("Numbers descending");
+            numbers.OrderByDescending(num => num).ToList().ForEach(x => Console.WriteLine(x));
 
             //Print to the console only the numbers greater than 6
+            var greaterThanSix = numbers.Where(num => num > 6);
 
+            Console.WriteLine();
+            Console.WriteLine("Greater than 6");
+            foreach(var num in greaterThanSix)
+            {
+                Console.WriteLine(num);
+            }
+            Console.WriteLine();
             //Order numbers in any order (acsending or desc) but only print 4 of them **foreach loop only!**
 
+            Console.WriteLine("Only 4");
+            foreach(var num in ascOrder.Take(4))
+            {
+                Console.WriteLine(num);
+            }
+
             //Change the value at index 4 to your age, then print the numbers in decsending order
+            //numbers[4] = 25;
+            numbers.SetValue(25, 4);
+
+            Console.WriteLine("Index 4 changed");
+            foreach (var num in numbers.OrderByDescending(x => x))
+            {
+                Console.WriteLine(num);
+            }
 
             // List of employees ***Do not remove this***
             var employees = CreateEmployees();
@@ -39,15 +75,48 @@ namespace LinqExercise
             //Print all the employees' FullName properties to the console only if their FirstName starts with a C OR an S.
             //Order this in acesnding order by FirstName.
 
+            var filtered = employees.Where(person => person.FirstName.ToLower()[0] == 'c'
+            || person.FirstName.ToLower()[0] == 's');
+            Console.WriteLine();
+            Console.WriteLine("Employees C or S");
+            foreach (var employee in filtered.OrderBy(x => x.FirstName))
+            {
+                Console.WriteLine(employee.FullName);
+            }
+
+            //employees.Where(person => person.FirstName.ToLower().StartsWith('c'));
+
             //Print all the employees' FullName and Age who are over the age 26 to the console.
             //Order this by Age first and then by FirstName in the same result.
+            var twentySix = employees.Where(x => x.Age > 26).OrderByDescending(x => x.Age)
+                .ThenBy(x => x.FirstName);
+
+
+            Console.WriteLine();
+            Console.WriteLine("Over 26");
+            foreach (var person in twentySix)
+            {
+                Console.WriteLine($"Name: {person.FullName}, Age: {person.Age}");
+            }
+
 
             //Print the Sum and then the Average of the employees' YearsOfExperience
             //if their YOE is less than or equal to 10 AND Age is greater than 35
 
-            //Add an employee to the end of the list without using employees.Add()
+            var YOE = employees.Where(x => x.YearsOfExperience <= 10 && x.Age > 35);
 
-            
+            Console.WriteLine($"Sum of YOE: {YOE.Sum(x => x.YearsOfExperience)}");
+            Console.WriteLine($"Average YOE: {YOE.Average(x => x.YearsOfExperience)}");
+
+            //Add an employee to the end of the list without using employees.Add()
+            employees = (List<Employee>)employees.Append(new Employee("Jeremy", "Huddleston", 25, 10)).ToList();
+
+            Console.WriteLine();
+            Console.WriteLine("Added new employee");
+            foreach (var person in employees)
+            {
+                Console.WriteLine(person.FullName);
+            }
             Console.WriteLine();
 
             Console.ReadLine();
